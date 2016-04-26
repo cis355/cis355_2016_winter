@@ -1,0 +1,74 @@
+<?php 
+
+# filename : jsonTest.php
+# author   : george corser
+# course   : cis355 (winter2016)
+# overview : print fomatted output from a JSON object
+# input    : api.svsu.edu/courses (a JSON API)
+# output   : lists of courses
+
+# get data from SVSU API
+
+$json = file_get_contents('https://api.svsu.edu/courses?prefix=CIS');
+$json2 = file_get_contents('https://api.svsu.edu/courses?prefix=CS');
+$json3 = file_get_contents('https://api.svsu.edu/courses?prefix=CIS&courseNumber=355');
+# echo $json;
+
+# convert JSON to PHP variable
+
+$obj = json_decode($json);
+$obj2 = json_decode($json2);
+$obj3 = json_decode($json3);
+# print_r($obj);
+# var_dump($obj);
+
+# print CIS listings
+
+echo "<table border=1>";
+
+foreach ( $obj->courses as $course ) {
+
+	$printline = "<tr>";
+	
+	# print each course listing (prefix, courseNumber, prerequisites)
+	$printline .= "<td>" . $course->prefix . "</td>";
+	$printline .= "<td>" . $course->courseNumber . "</td>";
+	$printline .= "<td>" . $course->term . "</td>";
+	$printline .= "<td>" . $course->prerequisites . "</td>";
+	$printline .= "<td>" . $course->meetingTimes[0]->days . "</td>";
+	$printline .= "<td>" . $course->meetingTimes[0]->startTime . "</td>";
+
+	echo $printline;
+	
+	$printline = "</tr>";
+	
+} // end foreach
+echo "</table>";
+/*
+# print CS listings
+
+foreach ( $obj2->courses as $course ) {
+# print each course listing (prefix, courseNumber, prerequisites)
+echo $course->prefix . " " . $course->courseNumber . 
+"... REQ: " . $course->prerequisites. $course->term . "-";
+
+# print each course listing (days, startTime)
+foreach($course->meetingTimes as $mtimes)
+echo $mtimes->days. "-". $mtimes->startTime. " \n";
+}
+
+# print CIS 355 listings
+
+foreach ( $obj3->courses as $course ) {
+# print each course listing (prefix, courseNumber, prerequisites)
+echo $course->prefix . " " . $course->courseNumber . 
+"... REQ: " . $course->prerequisites. $course->term . "-";
+
+# print each course listing (days, startTime)
+foreach($course->meetingTimes as $mtimes)
+echo $mtimes->days. "-". $mtimes->startTime. " \n";
+}
+
+
+*/
+?>
